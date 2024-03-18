@@ -1,9 +1,3 @@
-// const db = require('../config/config');
-// const article = {};
-// article.get = () => {
-//     return db.any('SELECT * FROM articles');
-//   };
-// module.exports = article;
 
 require('dotenv').config();
 const { Pool } = require('pg');
@@ -32,11 +26,32 @@ const createUsersTable = async () => {
     console.log('Users table created successfully');
   } catch (error) {
     console.error('Error creating users table:', error);
-  } finally {
-    pool.end();
+  } 
+};
+
+const getAllUsers = async ()=>{
+  try {
+    const query =`SELECT * FROM users`;
+    const {rows} = await pool.query(query);
+    return rows;
+  }catch(error){
+    console.error('Unable to fetch the users', error);
+  }
+}
+
+
+const createUser = async (username, email, password) => {
+  try {
+      const query = 'INSERT INTO users (username, email, password) VALUES ($1, $2, $3)';
+      await pool.query(query, [username, email, password]);
+      console.log('User created successfully');
+      return { success: true };
+  } catch (error) {
+      console.error('Error creating user:', error);
+      return { success: false, error: error.message };
   }
 };
 
-module.exports = { createUsersTable };
+module.exports = { createUsersTable, getAllUsers, createUser};
 
 

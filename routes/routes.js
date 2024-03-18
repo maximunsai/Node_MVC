@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-const {userTableController} = require('../controllers/controller');
+const {userTableController, createUserController, getUsers} = require('../controllers/controller');
 
-// module.exports =(app)=>{
-//     app.get('/', articleController.createArticle)
-// };
+
 
 router.get('/createTable', userTableController);
+router.post('/insert', createUserController);
+router.get('/get', getUsers);
 
 module.exports = router;
