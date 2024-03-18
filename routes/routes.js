@@ -1,5 +1,12 @@
-const articleController = require('../controllers/controller');
+const express = require('express');
+const router = express.Router();
 
-module.exports =(app)=>{
-    app.get('/', articleController.createArticle)
-};
+const {userTableController} = require('../controllers/controller');
+
+// module.exports =(app)=>{
+//     app.get('/', articleController.createArticle)
+// };
+
+router.get('/createTable', userTableController);
+
+module.exports = router;

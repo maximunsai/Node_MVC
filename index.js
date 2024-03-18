@@ -1,12 +1,10 @@
-require('dotenv').config();
-
 const app = require('express')();
 const path = require('path');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
 const port = 8080;
 
-const articles = require('./routes/routes');
+const userRoutes = require('./routes/routes');
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -22,7 +20,7 @@ app.use(bodyParser.json());
 // });
 
 // app.use(articles);
-articles(app);
+app.use('/users', userRoutes)
 
 
 app.listen(port , ()=>{

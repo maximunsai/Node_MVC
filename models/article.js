@@ -1,39 +1,42 @@
-const db = require('../config/config');
+// const db = require('../config/config');
+// const article = {};
+// article.get = () => {
+//     return db.any('SELECT * FROM articles');
+//   };
+// module.exports = article;
 
-const article = {};
-
-// article.create = (title, content)=>{
-//     return db.none(`DROP DATABASE IF EXISTS mvc;
-//     CREATE DATABASE mvc;
-//     CREATE TABLE IF NOT EXISTS articles(
-//         id BIGSERIAL PRIMARY KEY NOT NULL,
-//         title TEXT NOT NULL,
-//         content TEXT NOT NULL
-//     )`, [title, content]);
-// };
-
-article.get = () => {
-    return db.any('SELECT * FROM articles');
-  };
+require('dotenv').config();
+const { Pool } = require('pg');
 
 
-// article.create = async(req, res)=>{
-//     const dbName = req.params.name;
- 
-// try {
-//     // Connect to the default 'postgres' database to execute CREATE DATABASE command
-//     const client = await pool.connect();
-//     await client.query(`CREATE DATABASE ${dbName}`);
-    
-//     client.release();
+const pool = new Pool({
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_DATABASE,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT
+});
 
-//     res.send(`Database '${dbName}' created successfully.`);
-// } catch (error) {
-//     console.error('Error creating database:', error);
-//     res.status(500).send('Error creating database');
-// }
 
-// }
+const createUsersTable = async () => {
+  try {
+    const createTableQuery = `
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        username VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        password VARCHAR(255) NOT NULL
+      )
+    `;
+    await pool.query(createTableQuery);
+    console.log('Users table created successfully');
+  } catch (error) {
+    console.error('Error creating users table:', error);
+  } finally {
+    pool.end();
+  }
+};
 
-module.exports = article;
+module.exports = { createUsersTable };
+
 
